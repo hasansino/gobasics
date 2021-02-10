@@ -1,4 +1,4 @@
-package main
+package bitmask
 
 // https://en.wikipedia.org/wiki/Mask_(computing)
 
