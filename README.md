@@ -1,25 +1,8 @@
 # Go Basics
 
-A practice repository for basics in golang.
+A practice repository for basics in golang.  
 
-# TOC
+# Contributing
 
-## Algorithms
-
-General algorithms with explanation and examples.
-
-## Structures
-
-Data structures with use cases and examples.
-
-## Techniques
-
-Common techniques and tricks.
-
-## Principles
-
-Various principles applied to golang.
-
-## GoNuts
-
-Deep dive into golang internals.
+Contributions are accepted only in form of corrections or bugfixes.  
+New problems also are accepted, but only as problem definition without solution.  

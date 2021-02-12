@@ -1,6 +1,7 @@
 package linkedlist
 
 // https://en.wikipedia.org/wiki/Linked_list
+// https://afteracademy.com/blog/types-of-linked-list-and-operation-on-linked-list
 
 // LinkType represents type of linking used in list
 type LinkType int
