@@ -22,7 +22,7 @@ func IsCapable(m, c uint64) bool {
 }
 
 // AddCapability performs binary OR operation between m and c
-// Basically it sets c bits in m
+// Basically it sets c bits into m
 //
 // Example:
 // m (1000000) | c (1001100) => 1001100
