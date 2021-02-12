@@ -244,6 +244,7 @@ func (l *List) Merge(with *List) {
 }
 
 // Sort linked list with provided sorting function
+// This method is not protected against infinite loops
 func (l *List) Sort(fn func(v1, v2 interface{}) bool) {
 	if l.head == nil {
 		return
