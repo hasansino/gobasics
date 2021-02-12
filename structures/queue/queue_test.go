@@ -32,6 +32,20 @@ func TestQueue(t *testing.T) {
 	assert.Equal(t, 1, q.Size())
 	assert.Equal(t, 999, q.Front())
 	assert.Equal(t, 1, q.Size())
+
+	q2 := NewQueue(1000)
+	for i := 1; i <= 1000; i++ {
+		if i%5 == 0 { // remove each 5th element
+			if v := q2.Dequeue(); v == nil {
+				t.Error("failed to dequeue")
+			}
+		} else {
+			if err := q2.Enqueue(i); err != nil {
+				t.Error("failed to enqueue")
+			}
+		}
+	}
+	assert.Equal(t, 600, q2.Size())
 }
 
 func TestLLQueue(t *testing.T) {
@@ -60,4 +74,18 @@ func TestLLQueue(t *testing.T) {
 	assert.Equal(t, 1, q.Size())
 	assert.Equal(t, 999, q.Front())
 	assert.Equal(t, 1, q.Size())
+
+	q2 := NewQueue(1000)
+	for i := 1; i <= 1000; i++ {
+		if i%5 == 0 { // remove each 5th element
+			if v := q2.Dequeue(); v == nil {
+				t.Error("failed to dequeue")
+			}
+		} else {
+			if err := q2.Enqueue(i); err != nil {
+				t.Error("failed to enqueue")
+			}
+		}
+	}
+	assert.Equal(t, 600, q2.Size())
 }
