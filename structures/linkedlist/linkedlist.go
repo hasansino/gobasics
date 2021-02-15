@@ -180,7 +180,7 @@ func (l *List) DeleteIdx(idx int) bool {
 	return false
 }
 
-// DeleteValue removes firs occurrence of a node with given value
+// DeleteValue removes first occurrence of a node with given value
 func (l *List) DeleteValue(v interface{}) bool {
 	if l.head == nil {
 		return false
@@ -245,6 +245,7 @@ func (l *List) Merge(with *List) {
 
 // Sort linked list with provided sorting function
 // This method is not protected against infinite loops
+// It is up to client to provide adequate sorting function
 func (l *List) Sort(fn func(v1, v2 interface{}) bool) {
 	if l.head == nil {
 		return
@@ -255,10 +256,11 @@ func (l *List) Sort(fn func(v1, v2 interface{}) bool) {
 		for {
 			var (
 				prev   *Node
-				dryRun = true
+				dryRun = true // indicates no changes were made during single loop
 			)
+			// loop over all nodes in list starting with HEAD
 			for i := l.head; i.next != nil; {
-				// check if we need to swap them
+				// check if we need to swap current with next node
 				if fn(i.data, i.next.data) {
 					// create temporary nodes
 					var (
@@ -280,7 +282,7 @@ func (l *List) Sort(fn func(v1, v2 interface{}) bool) {
 					prev = tmpCurr
 					i = tmpNext
 
-					dryRun = false
+					dryRun = false // we will loop over all nodes again
 
 					continue
 				}
@@ -289,6 +291,8 @@ func (l *List) Sort(fn func(v1, v2 interface{}) bool) {
 				i = i.next
 			}
 
+			// no changes were made during this loop
+			// this means we sorted everything we could
 			if dryRun {
 				break
 			}

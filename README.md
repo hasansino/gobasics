@@ -4,5 +4,9 @@ A practice repository for basics in golang.
 
 # Contributing
 
-Contributions are accepted only in form of suggestions for improvement, corrections or bugfixes.  
-New problems also are accepted, but only as problem definition without solution.  
+Contributions are appreciated and accepted in form of:
+
+* Suggestions for improvement (code, style, tests etc.)
+* Grammar corrections
+* Bugfixes
+* Problem definitions w/o solution
