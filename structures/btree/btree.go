@@ -46,6 +46,11 @@ type Node struct {
 	right  *Node
 }
 
+// Value return value of node
+func (n *Node) Value() interface{} {
+	return n.data
+}
+
 // NewBTree creates new instance of BST
 func NewBTree(fn ComparisonFn) *BTree {
 	return &BTree{comparisonFn: fn}
