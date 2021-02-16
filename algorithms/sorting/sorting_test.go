@@ -36,11 +36,16 @@ var (
 		"gnome":       GnomeSort,
 		"insertion":   InsertionSort,
 		"selection":   SelectionSort,
+		// "heap":        HeapSort,
+		// "oddeven":     OddEventSort,
+		// "radix":       RadixSort,
+		// "shell":       ShellSort,
 	}
 	// using standard slice of integers
 	modulesRaw = map[string]func([]int) []int{
-		"merge": MergeSort,
-		"tree":  TreeSort,
+		"merge":    MergeSort,
+		"tree":     TreeSort,
+		"counting": CountingSort,
 	}
 )
 
