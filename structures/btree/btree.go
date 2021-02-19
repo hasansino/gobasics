@@ -10,11 +10,10 @@ import (
 // https://afteracademy.com/blog/what-is-a-tree-data-structure
 // https://afteracademy.com/blog/binary-search-tree-introduction-operations-and-applications
 
-// ComparisonFn used to compare values in BST
-// Returns true if v2 is greater(more prioritised) than v1
-// If !ComparisonFn(v1,v2) AND !ComparisonFn(v2,v1) we consider
-// values to be equal.
-type ComparisonFn func(v1, v2 interface{}) bool
+// Less is node comparison function
+// It should return true if i < j
+// if !Less(i,j) AND !Less(j,i) values are considered equal
+type Less func(i, j interface{}) bool
 
 // Order of traversal operation
 type Order uint8
@@ -34,8 +33,8 @@ const (
 
 // BTree is BST implementation
 type BTree struct {
-	root         *Node
-	comparisonFn ComparisonFn
+	root   *Node
+	lessFn Less
 }
 
 // Node of BST
@@ -52,18 +51,18 @@ func (n *Node) Value() interface{} {
 }
 
 // NewBTree creates new instance of BST
-func NewBTree(fn ComparisonFn) *BTree {
-	return &BTree{comparisonFn: fn}
+func NewBTree(fn Less) *BTree {
+	return &BTree{lessFn: fn}
 }
 
 // Validate btree integrity
 // Returns error should btree violate any of following rules:
 // * comparison function is nil
 // * root node have a parent
-// * any right sibling is less than parent
-// * any left sibling is greater than parent
+// * any right child is less than parent
+// * any left child is greater than parent
 func (t *BTree) Validate() error {
-	if t.comparisonFn == nil {
+	if t.lessFn == nil {
 		return errors.New("comparisonFn is nil")
 	}
 	if t.root == nil {
@@ -74,11 +73,11 @@ func (t *BTree) Validate() error {
 	return t.validateValues(t.root)
 }
 
-// validateValues of a node and it's siblings recursively
+// validateValues of a node and it's childs recursively
 func (t *BTree) validateValues(n *Node) error {
 	if n.left != nil {
-		if t.comparisonFn(n.data, n.left.data) {
-			return fmt.Errorf("value of left sibling (%v) is greater than parent node (%v)",
+		if t.lessFn(n.data, n.left.data) {
+			return fmt.Errorf("value of left child (%v) is greater than parent node (%v)",
 				n.left.data, n.data)
 		}
 		if err := t.validateValues(n.left); err != nil {
@@ -86,8 +85,8 @@ func (t *BTree) validateValues(n *Node) error {
 		}
 	}
 	if n.right != nil {
-		if t.comparisonFn(n.right.data, n.data) {
-			return fmt.Errorf("value of right sibling (%v) is lesser than parent node (%v)",
+		if t.lessFn(n.right.data, n.data) {
+			return fmt.Errorf("value of right child (%v) is lesser than parent node (%v)",
 				n.left.data, n.data)
 		}
 		if err := t.validateValues(n.right); err != nil {
@@ -148,13 +147,13 @@ func (t *BTree) Insert(v interface{}) {
 
 // insertAfter traverses tree and finds a spot to insert new value
 func (t *BTree) insertAfter(n *Node, v interface{}) {
-	if t.comparisonFn(n.data, v) { // goes to right side
+	if t.lessFn(n.data, v) { // goes to right side
 		if n.right == nil {
 			n.right = &Node{data: v, parent: n}
 		} else {
 			t.insertAfter(n.right, v)
 		}
-	} else if !t.comparisonFn(v, n.data) {
+	} else if !t.lessFn(v, n.data) {
 		return // duplicate
 	} else { // goes to left side
 		if n.left == nil {
@@ -177,7 +176,7 @@ func (t *BTree) Delete(v interface{}) bool {
 	// deletion of root node
 	if n.parent == nil {
 		switch {
-		case n.left == nil && n.right == nil: // no siblings
+		case n.left == nil && n.right == nil: // no children
 			t.root = nil // empty btree
 		case n.right != nil && n.left == nil: // one node, right
 			n.right.parent = nil
@@ -194,18 +193,18 @@ func (t *BTree) Delete(v interface{}) bool {
 
 	// found node is not root node
 	switch {
-	case n.left == nil && n.right == nil: // no siblings
+	case n.left == nil && n.right == nil: // no children
 		t.removeParentRelation(n)
 	case n.right != nil && n.left == nil: // one node, right
 		n.right.parent = n.parent // replace parent
-		if t.comparisonFn(n.parent.data, n.data) {
+		if t.lessFn(n.parent.data, n.data) {
 			n.parent.right = n.right
 		} else {
 			n.parent.left = n.right
 		}
 	case n.left != nil && n.right == nil: // one node, left
 		n.left.parent = n.parent // replace parent
-		if t.comparisonFn(n.parent.data, n.data) {
+		if t.lessFn(n.parent.data, n.data) {
 			n.parent.right = n.left
 		} else {
 			n.parent.left = n.left
@@ -223,15 +222,15 @@ type successorType uint8
 const (
 	leftChild successorType = 1 << iota
 	rightChild
-	leftDeepSibling
-	rightDeepSibling
+	leftDeepChild
+	rightDeepChild
 )
 
 // nodeSuccessor finds a node that should replace deleted node
 func (t *BTree) nodeSuccessor(n *Node) (*Node, successorType) {
 	// simple case, two scenarios
-	// we have n.left node, that does not have right sibling
-	// we have n.right node, that does not have left sibling
+	// we have n.left node, that does not have right child
+	// we have n.right node, that does not have left child
 	switch {
 	case n.left.right == nil:
 		return n.left, leftChild
@@ -244,17 +243,17 @@ func (t *BTree) nodeSuccessor(n *Node) (*Node, successorType) {
 		leftSuccessor = leftSuccessor.right
 	}
 	if leftSuccessor.left == nil {
-		return leftSuccessor, leftDeepSibling
+		return leftSuccessor, leftDeepChild
 	}
 	rightSuccessor := n.right
 	for rightSuccessor.left != nil {
 		rightSuccessor = rightSuccessor.left
 	}
 	if rightSuccessor.right == nil {
-		return rightSuccessor, rightDeepSibling
+		return rightSuccessor, rightDeepChild
 	}
 	// by default return left one
-	return leftSuccessor, leftDeepSibling
+	return leftSuccessor, leftDeepChild
 }
 
 // replaceNode with its successor
@@ -268,7 +267,7 @@ func (t *BTree) replaceNode(n, s *Node, st successorType) {
 	}
 	// replace nodes
 	switch st {
-	case leftChild, leftDeepSibling:
+	case leftChild, leftDeepChild:
 		s.right = n.right
 		n.right.parent = s
 		if replacingRootNode {
@@ -277,7 +276,7 @@ func (t *BTree) replaceNode(n, s *Node, st successorType) {
 			s.parent = n.parent
 			t.setAsParent(s, n.parent)
 		}
-		if st == leftDeepSibling {
+		if st == leftDeepChild {
 			tmp := s
 			for tmp.left != nil {
 				tmp = tmp.left
@@ -285,7 +284,7 @@ func (t *BTree) replaceNode(n, s *Node, st successorType) {
 			tmp.left = n.left
 			n.left.parent = tmp
 		}
-	case rightChild, rightDeepSibling:
+	case rightChild, rightDeepChild:
 		s.left = n.left
 		n.left.parent = s
 		if replacingRootNode {
@@ -294,7 +293,7 @@ func (t *BTree) replaceNode(n, s *Node, st successorType) {
 			s.parent = n.parent
 			t.setAsParent(s, n.parent)
 		}
-		if st == rightDeepSibling {
+		if st == rightDeepChild {
 			tmp := s
 			for tmp.right != nil {
 				tmp = tmp.right
@@ -308,7 +307,7 @@ func (t *BTree) replaceNode(n, s *Node, st successorType) {
 // removeParentRelation removes n as n.parent child
 func (t *BTree) removeParentRelation(n *Node) {
 	// if n > parent, n is right child
-	if t.comparisonFn(n.parent.data, n.data) {
+	if t.lessFn(n.parent.data, n.data) {
 		n.parent.right = nil
 	} else { // otherwise n is left child
 		n.parent.left = nil
@@ -317,7 +316,7 @@ func (t *BTree) removeParentRelation(n *Node) {
 
 // setAsParent sets n as child of p
 func (t *BTree) setAsParent(n, p *Node) {
-	if t.comparisonFn(p.data, n.data) {
+	if t.lessFn(p.data, n.data) {
 		p.right = n
 	} else {
 		p.left = n
@@ -330,7 +329,7 @@ func (t *BTree) Search(v interface{}) *Node {
 		return nil // empty tree
 	}
 	for i := t.root; ; {
-		greater := t.comparisonFn(i.data, v)
+		greater := t.lessFn(i.data, v)
 		if greater {
 			if i.right == nil {
 				break // no answer
@@ -338,7 +337,7 @@ func (t *BTree) Search(v interface{}) *Node {
 				i = i.right // traverse to right
 			}
 		} else {
-			if !t.comparisonFn(v, i.data) { // equal?
+			if !t.lessFn(v, i.data) { // equal?
 				return i // found it!
 			} else {
 				if i.left == nil {

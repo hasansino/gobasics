@@ -7,13 +7,8 @@ import (
 )
 
 var (
-	testComparisonFn = func(v1, v2 interface{}) bool {
-		v1Int, ok := v1.(int)
-		v2Int, ok2 := v2.(int)
-		if ok && ok2 {
-			return v2Int > v1Int
-		}
-		return false
+	lessFn = func(i, j interface{}) bool {
+		return i.(int) < j.(int)
 	}
 	testValues = []interface{}{10, 5, 11, 7, 24, 4, 3, 9, 8, 6, 20, 21, 19} // 13
 	//                                 10
@@ -28,7 +23,7 @@ var (
 )
 
 func generateBTree(values []interface{}) *BTree {
-	btree := NewBTree(testComparisonFn)
+	btree := NewBTree(lessFn)
 	for _, v := range values {
 		btree.Insert(v)
 	}
@@ -42,7 +37,7 @@ func TestBTree_Validate(t *testing.T) {
 	btree.root.parent = &Node{}
 	assert.Error(t, btree.Validate())
 
-	btree.comparisonFn = nil
+	btree.lessFn = nil
 	assert.Error(t, btree.Validate())
 
 	btree = generateBTree(testValues)
