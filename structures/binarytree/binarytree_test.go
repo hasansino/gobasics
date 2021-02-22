@@ -1,4 +1,4 @@
-package btree
+package binarytree
 
 import (
 	"testing"
@@ -22,16 +22,16 @@ var (
 	//                                8      19  21
 )
 
-func generateBTree(values []interface{}) *BTree {
-	btree := NewBTree(lessFn)
+func generateBinaryTree(values []interface{}) *BinaryTree {
+	btree := NewBinaryTree(lessFn)
 	for _, v := range values {
 		btree.Insert(v)
 	}
 	return btree
 }
 
-func TestBTree_Validate(t *testing.T) {
-	btree := generateBTree(testValues)
+func TestBinaryTree_Validate(t *testing.T) {
+	btree := generateBinaryTree(testValues)
 	assert.NoError(t, btree.Validate())
 
 	btree.root.parent = &Node{}
@@ -40,44 +40,44 @@ func TestBTree_Validate(t *testing.T) {
 	btree.lessFn = nil
 	assert.Error(t, btree.Validate())
 
-	btree = generateBTree(testValues)
+	btree = generateBinaryTree(testValues)
 	btree.root.left.data = 22
 	assert.Error(t, btree.Validate())
 
-	btree = generateBTree(testValues)
+	btree = generateBinaryTree(testValues)
 	btree.root.right.data = 1
 	assert.Error(t, btree.Validate())
 }
 
-func TestBTree_Len(t *testing.T) {
-	btree := generateBTree(nil) // empty btree
+func TestBinaryTree_Len(t *testing.T) {
+	btree := generateBinaryTree(nil) // empty btree
 	assert.NoError(t, btree.Validate())
 	assert.Equal(t, 0, btree.Len())
-	btree = generateBTree(testValues)
+	btree = generateBinaryTree(testValues)
 	assert.NoError(t, btree.Validate())
 	assert.Equal(t, 13, btree.Len())
 }
 
-func TestBTree_Min(t *testing.T) {
-	btree := generateBTree(nil) // empty btree
+func TestBinaryTree_Min(t *testing.T) {
+	btree := generateBinaryTree(nil) // empty btree
 	assert.NoError(t, btree.Validate())
 	assert.Nil(t, btree.Min())
-	btree = generateBTree(testValues) // empty btree
+	btree = generateBinaryTree(testValues) // empty btree
 	assert.NoError(t, btree.Validate())
 	assert.Equal(t, 3, btree.Min())
 }
 
-func TestBTree_Max(t *testing.T) {
-	btree := generateBTree(nil) // empty btree
+func TestBinaryTree_Max(t *testing.T) {
+	btree := generateBinaryTree(nil) // empty btree
 	assert.NoError(t, btree.Validate())
 	assert.Nil(t, btree.Min())
-	btree = generateBTree(testValues) // empty btree
+	btree = generateBinaryTree(testValues) // empty btree
 	assert.NoError(t, btree.Validate())
 	assert.Equal(t, 24, btree.Max())
 }
 
-func TestBTree_Insert(t *testing.T) {
-	btree := generateBTree(nil)
+func TestBinaryTree_Insert(t *testing.T) {
+	btree := generateBinaryTree(nil)
 	assert.Equal(t, 0, btree.Len())
 
 	btree.Insert(20)
@@ -95,7 +95,7 @@ func TestBTree_Insert(t *testing.T) {
 }
 
 func TestBtree_Delete_Simple(t *testing.T) {
-	btree := generateBTree(testValues)
+	btree := generateBinaryTree(testValues)
 	assert.False(t, btree.Delete(999)) // does not exist
 	assert.Equal(t, 13, btree.Len())
 	assert.NoError(t, btree.Validate())
@@ -110,7 +110,7 @@ func TestBtree_Delete_Simple(t *testing.T) {
 	//                     _      _       _   20
 	//                                  /    /  \
 	//                                _     19  21
-	btree = generateBTree([]interface{}{10, 11, 24, 20, 19, 21})
+	btree = generateBinaryTree([]interface{}{10, 11, 24, 20, 19, 21})
 	assert.True(t, btree.Delete(10))
 	assert.Nil(t, btree.Search(10))
 	assert.Equal(t, 5, btree.Len())
@@ -126,7 +126,7 @@ func TestBtree_Delete_Simple(t *testing.T) {
 	//                     3      6       9    __
 	//                                  /     /  \
 	//                                8      __  __
-	btree = generateBTree([]interface{}{10, 5, 4, 3, 7, 6, 9, 8})
+	btree = generateBinaryTree([]interface{}{10, 5, 4, 3, 7, 6, 9, 8})
 	assert.True(t, btree.Delete(10))
 	assert.Nil(t, btree.Search(10))
 	assert.Equal(t, 7, btree.Len())
@@ -142,7 +142,7 @@ func TestBtree_Delete_Simple(t *testing.T) {
 	//                     3      6       9    20
 	//                                  /     /  \
 	//                                8      19  21 <-
-	btree = generateBTree(testValues)
+	btree = generateBinaryTree(testValues)
 	assert.True(t, btree.Delete(21))
 	assert.Nil(t, btree.Search(21))
 	assert.Equal(t, 12, btree.Len())
@@ -158,7 +158,7 @@ func TestBtree_Delete_Simple(t *testing.T) {
 	//                     3 <-    6       9    20
 	//                                  /     /  \
 	//                                8      19  21
-	btree = generateBTree(testValues)
+	btree = generateBinaryTree(testValues)
 	assert.True(t, btree.Delete(3))
 	assert.Nil(t, btree.Search(3))
 	assert.Equal(t, 12, btree.Len())
@@ -174,7 +174,7 @@ func TestBtree_Delete_Simple(t *testing.T) {
 	//                     3       6       9    20
 	//                                  /     /  \
 	//                                8      19  21
-	btree = generateBTree(testValues)
+	btree = generateBinaryTree(testValues)
 	assert.True(t, btree.Delete(11))
 	assert.Nil(t, btree.Search(11))
 	assert.Equal(t, 12, btree.Len())
@@ -190,7 +190,7 @@ func TestBtree_Delete_Simple(t *testing.T) {
 	//                     3       6     9     20
 	//                                  /     /  \
 	//                                8      19  21
-	btree = generateBTree(testValues)
+	btree = generateBinaryTree(testValues)
 	assert.True(t, btree.Delete(4))
 	assert.Nil(t, btree.Search(4))
 	assert.Equal(t, 12, btree.Len())
@@ -208,7 +208,7 @@ func TestBtree_Delete_WithSuccessor(t *testing.T) {
 	//                     3      6       9    20
 	//                                  /     /  \
 	//                                8      19  21
-	btree := generateBTree(testValues)
+	btree := generateBinaryTree(testValues)
 	assert.True(t, btree.Delete(10))
 	assert.Nil(t, btree.Search(10))
 	assert.Equal(t, 12, btree.Len())
@@ -224,7 +224,7 @@ func TestBtree_Delete_WithSuccessor(t *testing.T) {
 	//                     3                  20
 	//                                       /  \
 	//                                      19  21
-	btree = generateBTree([]interface{}{10, 5, 4, 3, 15, 24, 20, 21, 19, 12})
+	btree = generateBinaryTree([]interface{}{10, 5, 4, 3, 15, 24, 20, 21, 19, 12})
 	assert.True(t, btree.Delete(10))
 	assert.Nil(t, btree.Search(10))
 	assert.Equal(t, 9, btree.Len())
@@ -240,7 +240,7 @@ func TestBtree_Delete_WithSuccessor(t *testing.T) {
 	//                                  11  13
 	//                                        \
 	//                                        14
-	btree = generateBTree([]interface{}{10, 5, 7, 15, 24, 12, 11, 13, 14})
+	btree = generateBinaryTree([]interface{}{10, 5, 7, 15, 24, 12, 11, 13, 14})
 	assert.True(t, btree.Delete(10))
 	assert.Nil(t, btree.Search(10))
 	assert.Equal(t, 8, btree.Len())
@@ -254,7 +254,7 @@ func TestBtree_Delete_WithSuccessor(t *testing.T) {
 	//                                7   12    24
 	//                               /   /
 	//                              6   11 <- successor
-	btree = generateBTree([]interface{}{10, 5, 7, 6, 15, 24, 12, 11})
+	btree = generateBinaryTree([]interface{}{10, 5, 7, 6, 15, 24, 12, 11})
 	assert.True(t, btree.Delete(10))
 	assert.Nil(t, btree.Search(10))
 	assert.Equal(t, 7, btree.Len())
@@ -268,7 +268,7 @@ func TestBtree_Delete_WithSuccessor(t *testing.T) {
 	//                  successor -> 12   30  75
 	//                               /     \
 	//                              10     35
-	btree = generateBTree([]interface{}{22, 60, 30, 35, 75, 8, 12, 10})
+	btree = generateBinaryTree([]interface{}{22, 60, 30, 35, 75, 8, 12, 10})
 	assert.True(t, btree.Delete(22))
 	assert.Nil(t, btree.Search(22))
 	assert.Equal(t, 7, btree.Len())
@@ -284,7 +284,7 @@ func TestBtree_Delete_WithSuccessor(t *testing.T) {
 	//                     3      6       9    20
 	//                                  /     /  \
 	//                                8      19  21
-	btree = generateBTree(testValues)
+	btree = generateBinaryTree(testValues)
 	assert.True(t, btree.Delete(5))
 	assert.Nil(t, btree.Search(5))
 	assert.Equal(t, 12, btree.Len())
@@ -300,7 +300,7 @@ func TestBtree_Delete_WithSuccessor(t *testing.T) {
 	//                     3      6       9    20
 	//                                  /     /  \
 	//                                8      19  21
-	btree = generateBTree(testValues)
+	btree = generateBinaryTree(testValues)
 	assert.True(t, btree.Delete(5))
 	assert.Nil(t, btree.Search(5))
 	assert.Equal(t, 12, btree.Len())
@@ -316,7 +316,7 @@ func TestBtree_Delete_WithSuccessor(t *testing.T) {
 	//                     3      6       9    20
 	//                                  /     /  \
 	//                                8      19  21
-	btree = generateBTree(testValues)
+	btree = generateBinaryTree(testValues)
 	assert.True(t, btree.Delete(7))
 	assert.Nil(t, btree.Search(7))
 	assert.Equal(t, 12, btree.Len())
@@ -332,7 +332,7 @@ func TestBtree_Delete_WithSuccessor(t *testing.T) {
 	//                     3      6       9    20 <-
 	//                                  /     /  \
 	//                                8      19  21
-	btree = generateBTree(testValues)
+	btree = generateBinaryTree(testValues)
 	assert.True(t, btree.Delete(20))
 	assert.Nil(t, btree.Search(20))
 	assert.Equal(t, 12, btree.Len())
@@ -350,7 +350,7 @@ func TestBtree_Delete_Multi(t *testing.T) {
 	//                     3      6       9    20
 	//                                  /     /  \
 	//                                8      19  21
-	btree := generateBTree(testValues)
+	btree := generateBinaryTree(testValues)
 	assert.True(t, btree.Delete(10))
 	assert.Nil(t, btree.Search(10))
 	assert.True(t, btree.Delete(20))
@@ -363,8 +363,8 @@ func TestBtree_Delete_Multi(t *testing.T) {
 	assert.NoError(t, btree.Validate())
 }
 
-func TestBTree_Search(t *testing.T) {
-	btree := generateBTree(testValues)
+func TestBinaryTree_Search(t *testing.T) {
+	btree := generateBinaryTree(testValues)
 	searchRes := btree.Search(24)
 	assert.NotNil(t, searchRes)
 	assert.Equal(t, 24, searchRes.data)
@@ -376,7 +376,7 @@ func TestBTree_Search(t *testing.T) {
 func TestBtree_Traverse_NLR(t *testing.T) {
 	var (
 		traversedPath = make([]interface{}, 0)
-		btree         = generateBTree(testValues)
+		btree         = generateBinaryTree(testValues)
 	)
 	btree.Traverse(NLR, func(node *Node) bool {
 		traversedPath = append(traversedPath, node.data)
@@ -388,7 +388,7 @@ func TestBtree_Traverse_NLR(t *testing.T) {
 func TestBtree_Traverse_LNR(t *testing.T) {
 	var (
 		traversedPath = make([]interface{}, 0)
-		btree         = generateBTree(testValues)
+		btree         = generateBinaryTree(testValues)
 	)
 	btree.Traverse(LNR, func(node *Node) bool {
 		traversedPath = append(traversedPath, node.data)
@@ -400,7 +400,7 @@ func TestBtree_Traverse_LNR(t *testing.T) {
 func TestBtree_Traverse_RNL(t *testing.T) {
 	var (
 		traversedPath = make([]interface{}, 0)
-		btree         = generateBTree(testValues)
+		btree         = generateBinaryTree(testValues)
 	)
 	btree.Traverse(RNL, func(node *Node) bool {
 		traversedPath = append(traversedPath, node.data)
@@ -412,7 +412,7 @@ func TestBtree_Traverse_RNL(t *testing.T) {
 func TestBtree_Traverse_LRN(t *testing.T) {
 	var (
 		traversedPath = make([]interface{}, 0)
-		btree         = generateBTree(testValues)
+		btree         = generateBinaryTree(testValues)
 	)
 	btree.Traverse(LRN, func(node *Node) bool {
 		traversedPath = append(traversedPath, node.data)

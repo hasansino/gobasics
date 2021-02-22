@@ -1,4 +1,4 @@
-package btree
+package binarytree
 
 import (
 	"errors"
@@ -31,8 +31,8 @@ const (
 	LRN = PostOrder
 )
 
-// BTree is BST implementation
-type BTree struct {
+// BinaryTree is BST implementation
+type BinaryTree struct {
 	root   *Node
 	lessFn Less
 }
@@ -50,31 +50,31 @@ func (n *Node) Value() interface{} {
 	return n.data
 }
 
-// NewBTree creates new instance of BST
-func NewBTree(fn Less) *BTree {
-	return &BTree{lessFn: fn}
+// NewBinaryTree creates new instance of BST
+func NewBinaryTree(fn Less) *BinaryTree {
+	return &BinaryTree{lessFn: fn}
 }
 
-// Validate btree integrity
-// Returns error should btree violate any of following rules:
+// Validate binary tree integrity
+// Returns error should binary tree violate any of following rules:
 // * comparison function is nil
 // * root node have a parent
 // * any right child is less than parent
 // * any left child is greater than parent
-func (t *BTree) Validate() error {
+func (t *BinaryTree) Validate() error {
 	if t.lessFn == nil {
 		return errors.New("comparisonFn is nil")
 	}
 	if t.root == nil {
-		return nil // empty btree
+		return nil // empty binary tree
 	} else if t.root != nil && t.root.parent != nil {
 		return errors.New("root element have parent node")
 	}
 	return t.validateValues(t.root)
 }
 
-// validateValues of a node and it's childs recursively
-func (t *BTree) validateValues(n *Node) error {
+// validateValues of a node and it's children recursively
+func (t *BinaryTree) validateValues(n *Node) error {
 	if n.left != nil {
 		if t.lessFn(n.data, n.left.data) {
 			return fmt.Errorf("value of left child (%v) is greater than parent node (%v)",
@@ -96,8 +96,8 @@ func (t *BTree) validateValues(n *Node) error {
 	return nil
 }
 
-// Len of a btree is a number of elements it have
-func (t *BTree) Len() int {
+// Len of a binary tree is a number of elements it have
+func (t *BinaryTree) Len() int {
 	if t.root == nil {
 		return 0
 	}
@@ -109,9 +109,9 @@ func (t *BTree) Len() int {
 	return cnt
 }
 
-// Min value of btree
-// Returns nil if btree is empty
-func (t *BTree) Min() interface{} {
+// Min value of binary tree
+// Returns nil if binary tree is empty
+func (t *BinaryTree) Min() interface{} {
 	if t.root == nil {
 		return nil
 	}
@@ -122,9 +122,9 @@ func (t *BTree) Min() interface{} {
 	return n.data
 }
 
-// Max value of btree
-// Returns nil if btree is empty
-func (t *BTree) Max() interface{} {
+// Max value of binary tree
+// Returns nil if binary tree is empty
+func (t *BinaryTree) Max() interface{} {
 	if t.root == nil {
 		return nil
 	}
@@ -135,9 +135,9 @@ func (t *BTree) Max() interface{} {
 	return n.data
 }
 
-// Insert new value to btree
+// Insert new value to binary tree
 // Duplicate values are ignored
-func (t *BTree) Insert(v interface{}) {
+func (t *BinaryTree) Insert(v interface{}) {
 	if t.root == nil { // empty tree, just insert as root node
 		t.root = &Node{data: v}
 		return
@@ -146,7 +146,7 @@ func (t *BTree) Insert(v interface{}) {
 }
 
 // insertAfter traverses tree and finds a spot to insert new value
-func (t *BTree) insertAfter(n *Node, v interface{}) {
+func (t *BinaryTree) insertAfter(n *Node, v interface{}) {
 	if t.lessFn(n.data, v) { // goes to right side
 		if n.right == nil {
 			n.right = &Node{data: v, parent: n}
@@ -164,8 +164,8 @@ func (t *BTree) insertAfter(n *Node, v interface{}) {
 	}
 }
 
-// Delete value from btree
-func (t *BTree) Delete(v interface{}) bool {
+// Delete value from binary tree
+func (t *BinaryTree) Delete(v interface{}) bool {
 	n := t.Search(v)
 
 	// no such node exists
@@ -177,7 +177,7 @@ func (t *BTree) Delete(v interface{}) bool {
 	if n.parent == nil {
 		switch {
 		case n.left == nil && n.right == nil: // no children
-			t.root = nil // empty btree
+			t.root = nil // empty binary tree
 		case n.right != nil && n.left == nil: // one node, right
 			n.right.parent = nil
 			t.root = n.right
@@ -227,7 +227,7 @@ const (
 )
 
 // nodeSuccessor finds a node that should replace deleted node
-func (t *BTree) nodeSuccessor(n *Node) (*Node, successorType) {
+func (t *BinaryTree) nodeSuccessor(n *Node) (*Node, successorType) {
 	// simple case, two scenarios
 	// we have n.left node, that does not have right child
 	// we have n.right node, that does not have left child
@@ -257,7 +257,7 @@ func (t *BTree) nodeSuccessor(n *Node) (*Node, successorType) {
 }
 
 // replaceNode with its successor
-func (t *BTree) replaceNode(n, s *Node, st successorType) {
+func (t *BinaryTree) replaceNode(n, s *Node, st successorType) {
 	var replacingRootNode = n.parent == nil
 	// detach successor as child of its parent node
 	t.removeParentRelation(s)
@@ -305,7 +305,7 @@ func (t *BTree) replaceNode(n, s *Node, st successorType) {
 }
 
 // removeParentRelation removes n as n.parent child
-func (t *BTree) removeParentRelation(n *Node) {
+func (t *BinaryTree) removeParentRelation(n *Node) {
 	// if n > parent, n is right child
 	if t.lessFn(n.parent.data, n.data) {
 		n.parent.right = nil
@@ -315,7 +315,7 @@ func (t *BTree) removeParentRelation(n *Node) {
 }
 
 // setAsParent sets n as child of p
-func (t *BTree) setAsParent(n, p *Node) {
+func (t *BinaryTree) setAsParent(n, p *Node) {
 	if t.lessFn(p.data, n.data) {
 		p.right = n
 	} else {
@@ -324,7 +324,7 @@ func (t *BTree) setAsParent(n, p *Node) {
 }
 
 // Search value
-func (t *BTree) Search(v interface{}) *Node {
+func (t *BinaryTree) Search(v interface{}) *Node {
 	if t.root == nil {
 		return nil // empty tree
 	}
@@ -351,20 +351,20 @@ func (t *BTree) Search(v interface{}) *Node {
 	return nil
 }
 
-// Traverse btree with given traversal order and callback function
+// Traverse binary tree with given traversal order and callback function
 // which will be called on each traversed node.
 // Callback can return false to abort traversal or true to continue.
-func (t *BTree) Traverse(o Order, callback func(*Node) bool) {
+func (t *BinaryTree) Traverse(o Order, callback func(*Node) bool) {
 	t.traverse(t.root, o, callback)
 }
 
 // TraverseFrom is identical to Traverse, but additionally
 // accepts a node from which traversal is started.
-func (t *BTree) TraverseFrom(n *Node, o Order, callback func(*Node) bool) {
+func (t *BinaryTree) TraverseFrom(n *Node, o Order, callback func(*Node) bool) {
 	t.traverse(n, o, callback)
 }
 
-func (t *BTree) traverse(n *Node, o Order, callback func(*Node) bool) {
+func (t *BinaryTree) traverse(n *Node, o Order, callback func(*Node) bool) {
 	if n == nil || callback == nil {
 		return
 	}
