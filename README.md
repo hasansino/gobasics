@@ -1,5 +1,8 @@
 # Go Basics
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/hasansino/gobasics)](https://goreportcard.com/report/github.com/hasansino/gobasics)
+[![Build Status](https://travis-ci.com/hasansino/gobasics.svg?branch=master)](https://travis-ci.com/hasansino/gobasics)
+
 A practice repository for basics in golang.  
 
 # Contributing
