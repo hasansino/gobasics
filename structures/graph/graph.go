@@ -39,20 +39,20 @@ func NewGraph(size int) *Graph {
 	}
 }
 
-// Eccentricity returns maximum distance between given n to all others
-func (g *Graph) Eccentricity(n int) int { return 0 } // @TODO
-
 // Radius is minimum eccentricity of a graph
-func (g *Graph) Radius() int { return 0 } // @TODO
+func (g *Graph) Radius() int { return 0 }
 
 // Diameter is maximum eccentricity of a graph
-func (g *Graph) Diameter() int { return 0 } // @TODO
+func (g *Graph) Diameter() int { return 0 }
 
 // CentralPoint is node whose eccentricity is equal to radius
-func (g *Graph) CentralPoint() int { return 0 } // @TODO
+func (g *Graph) CentralPoint() int { return 0 }
 
-// Circumference returns number of edges in longest path of graph.
-func (g *Graph) Circumference() int { return 0 } // @TODO
+// Circumference returns number of edges in longest path of graph
+func (g *Graph) Circumference() int { return 0 }
+
+// Eccentricity returns maximum distance between given vertex n to any other
+func (g *Graph) Eccentricity() int { return 0 }
 
 // InsertNode into graph with given value
 // Returns index of insertion
@@ -91,18 +91,14 @@ func (g *Graph) Adjacent(i, j int) bool {
 // https://afteracademy.com/blog/graph-traversal-breadth-first-search
 
 // BreathFirstSearch of a graph
-func (g *Graph) BreathFirstSearch(v interface{}) bool {
-	if g.nodes[0] == nil {
-		return false // empty graph
-	}
-
+func (g *Graph) BreathFirstSearch(v interface{}) int {
 	var (
 		q       = queue.NewLLQueue(g.size)
 		visited = make(map[int]bool, g.size)
 	)
 
 	if err := q.Enqueue(0); err != nil {
-		return false
+		return -1
 	}
 
 	for !q.Empty() {
@@ -111,30 +107,26 @@ func (g *Graph) BreathFirstSearch(v interface{}) bool {
 			continue
 		}
 		if g.nodes[n].value == v {
-			return true
+			return n
 		}
 		visited[n] = true
 		for j := 0; j < g.size; j++ {
 			if g.edges[n][j] != nil {
 				if err := q.Enqueue(j); err != nil {
-					return false
+					return -1
 				}
 			}
 		}
 	}
 
-	return false
+	return -1
 }
 
 // https://en.wikipedia.org/wiki/Depth-first_search
 // https://afteracademy.com/blog/graph-traversal-depth-first-search
 
 // DepthFirstSearch of graph
-func (g *Graph) DepthFirstSearch(v interface{}) bool {
-	if g.nodes[0] == nil {
-		return false // empty graph
-	}
-
+func (g *Graph) DepthFirstSearch(v interface{}) int {
 	var (
 		s       = stack.NewLLStack()
 		visited = make(map[int]bool, g.size)
@@ -148,7 +140,7 @@ func (g *Graph) DepthFirstSearch(v interface{}) bool {
 			continue
 		}
 		if g.nodes[n].value == v {
-			return true
+			return n
 		}
 		visited[n] = true
 		for j := 0; j < g.size; j++ {
@@ -158,7 +150,7 @@ func (g *Graph) DepthFirstSearch(v interface{}) bool {
 		}
 	}
 
-	return false
+	return -1
 }
 
 // ShortestPathQueueItem with path already traversed for backtracking
@@ -169,10 +161,6 @@ type ShortestPathQueueItem struct {
 
 // ShortestPath from root node to node with given value
 func (g *Graph) ShortestPath(v interface{}) []int {
-	if g.nodes[0] == nil {
-		return nil // empty graph
-	}
-
 	var (
 		q       = queue.NewLLQueue(g.size)
 		visited = make(map[int]bool, g.size)
@@ -207,4 +195,45 @@ func (g *Graph) ShortestPath(v interface{}) []int {
 	}
 
 	return nil
+}
+
+// https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+// https://afteracademy.com/blog/dijkstras-algorithm
+
+// DijkstrasShortestDistances algorithm
+func (g *Graph) DijkstrasShortestDistances(from int) []int {
+	var (
+		visited   = make([]bool, g.size)
+		distances = make([]int, g.size)
+	)
+
+	for j := 0; j < g.size; j++ {
+		distances[j] = -1 // undefined
+	}
+	distances[from] = 0
+
+	for j := 0; j < g.size; j++ {
+		next := g.dijkstrasShortestPathNextNode(visited, distances)
+		visited[next] = true
+		for k := 0; k < g.size; k++ {
+			if !visited[k] && g.edges[next][k] != nil {
+				if distances[k] < 0 || distances[next]+g.edges[next][k].weight < distances[k] {
+					distances[k] = distances[next] + g.edges[next][k].weight
+				}
+			}
+		}
+	}
+
+	return distances
+}
+
+func (g *Graph) dijkstrasShortestPathNextNode(visited []bool, distances []int) int {
+	var minIdx = -1
+	for j := 0; j < g.size; j++ {
+		if !visited[j] && distances[j] >= 0 &&
+			(minIdx == -1 || distances[j] < distances[minIdx]) {
+			minIdx = j
+		}
+	}
+	return minIdx
 }
