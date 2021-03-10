@@ -1,4 +1,4 @@
-package searching
+package searchnum
 
 // https://en.wikipedia.org/wiki/Ternary_search
 
