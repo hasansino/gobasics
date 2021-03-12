@@ -59,6 +59,7 @@ func (c *Cache) Put(key string, value interface{}) {
 // Get a value by key, return nil if value not found
 func (c *Cache) Get(key string) interface{} {
 	if v, ok := c.data[key]; ok {
+		c.queue.upfront(v.qItem)
 		return v.value
 	}
 	return nil
@@ -92,13 +93,22 @@ func (q *queue) add(key string) *queueItem {
 
 // upfront moves queueItem in front of queue
 func (q *queue) upfront(n *queueItem) {
-	var (
-		prev = n.prev
-		next = n.next
-	)
+	if n.next == nil { // already in front
+		return
+	}
+	if n.prev == nil { // this is tail
+		n.next.prev = nil
+		q.tail = n.next
+		n.next = nil
+		q.head.next = n
+		n.prev = q.head
+		q.head = n
+		return
+	}
+	// somewhere in the middle
+	n.prev.next = n.next
+	n.next.prev = n.prev
 	n.prev, n.next = q.head, nil
-	prev.next = next
-	next.prev = prev
 	q.head.next = n
 	q.head = n
 }
@@ -106,7 +116,13 @@ func (q *queue) upfront(n *queueItem) {
 // evict deletes node from queue
 func (q *queue) evict(n *queueItem) {
 	if n.prev == nil {
+		if n.key == q.head.key {
+			n.prev, n.next = nil, nil
+			q.tail, q.head = nil, nil
+			return
+		}
+		n.next.prev = nil
 		q.tail = n.next
-		n.next = nil
+		n.prev, n.next = nil, nil
 	}
 }
