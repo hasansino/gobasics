@@ -1,11 +1,6 @@
-/*
-Package lru is a very simple implementation of LRU Cache structure.
-Example:
-	c := NewCache(10) // create new cache of size 10
-	c.Put("key", "value")
-	r := c.Get("key")
-	fmt.Printf("%v\n", r)
-*/
+//
+// Package lru is a very simple implementation of LRU Cache structure.
+//
 package lru
 
 // Cache is LRU cache implementation
@@ -35,7 +30,9 @@ func (c *Cache) Len() int {
 	return len(c.data)
 }
 
-// Put a key-value pair into cache
+// Put a key-value pair into cache, it will update entry
+// if it already exists
+// This operation will make entry most recently used
 func (c *Cache) Put(key string, value interface{}) {
 	if _, exists := c.data[key]; exists {
 		// update existing node and move qNode in front
@@ -57,6 +54,7 @@ func (c *Cache) Put(key string, value interface{}) {
 }
 
 // Get a value by key, return nil if value not found
+// This operation will make entry most recently used
 func (c *Cache) Get(key string) interface{} {
 	if v, ok := c.data[key]; ok {
 		c.queue.upfront(v.qItem)

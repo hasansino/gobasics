@@ -1,11 +1,6 @@
-/*
-Package linkedlist is basic implementation of doubly-linked list.
-Example:
-	l := NewList()
-	l.Append("test")
-	n := l.SearchValue("test")
-	fmt.Printf("%v\n", n.Data)
-*/
+//
+// Package linkedlist implements doubly-linked list.
+//
 package linkedlist
 
 // https://en.wikipedia.org/wiki/Linked_list

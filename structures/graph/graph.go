@@ -1,3 +1,6 @@
+//
+// Package graph implements graph data structure and basic operations with it.
+//
 package graph
 
 import (

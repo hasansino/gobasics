@@ -1,3 +1,6 @@
+//
+// Package binarytree is implementation of binary tree data structure.
+//
 package binarytree
 
 import (
@@ -39,15 +42,10 @@ type BinaryTree struct {
 
 // Node of BST
 type Node struct {
-	data   interface{}
+	Data   interface{}
 	parent *Node
 	left   *Node
 	right  *Node
-}
-
-// Value return value of node
-func (n *Node) Value() interface{} {
-	return n.data
 }
 
 // NewBinaryTree creates new instance of BST
@@ -76,18 +74,18 @@ func (t *BinaryTree) Validate() error {
 // validateValues of a node and it's children recursively
 func (t *BinaryTree) validateValues(n *Node) error {
 	if n.left != nil {
-		if t.lessFn(n.data, n.left.data) {
+		if t.lessFn(n.Data, n.left.Data) {
 			return fmt.Errorf("value of left child (%v) is greater than parent node (%v)",
-				n.left.data, n.data)
+				n.left.Data, n.Data)
 		}
 		if err := t.validateValues(n.left); err != nil {
 			return err
 		}
 	}
 	if n.right != nil {
-		if t.lessFn(n.right.data, n.data) {
+		if t.lessFn(n.right.Data, n.Data) {
 			return fmt.Errorf("value of right child (%v) is lesser than parent node (%v)",
-				n.left.data, n.data)
+				n.left.Data, n.Data)
 		}
 		if err := t.validateValues(n.right); err != nil {
 			return err
@@ -119,7 +117,7 @@ func (t *BinaryTree) Min() interface{} {
 	for n.left != nil {
 		n = n.left
 	}
-	return n.data
+	return n.Data
 }
 
 // Max value of binary tree
@@ -132,14 +130,14 @@ func (t *BinaryTree) Max() interface{} {
 	for n.right != nil {
 		n = n.right
 	}
-	return n.data
+	return n.Data
 }
 
 // Insert new value to binary tree
 // Duplicate values are ignored
 func (t *BinaryTree) Insert(v interface{}) {
 	if t.root == nil { // empty tree, just insert as root node
-		t.root = &Node{data: v}
+		t.root = &Node{Data: v}
 		return
 	}
 	t.insertAfter(t.root, v)
@@ -147,17 +145,17 @@ func (t *BinaryTree) Insert(v interface{}) {
 
 // insertAfter traverses tree and finds a spot to insert new value
 func (t *BinaryTree) insertAfter(n *Node, v interface{}) {
-	if t.lessFn(n.data, v) { // goes to right side
+	if t.lessFn(n.Data, v) { // goes to right side
 		if n.right == nil {
-			n.right = &Node{data: v, parent: n}
+			n.right = &Node{Data: v, parent: n}
 		} else {
 			t.insertAfter(n.right, v)
 		}
-	} else if !t.lessFn(v, n.data) {
+	} else if !t.lessFn(v, n.Data) {
 		return // duplicate
 	} else { // goes to left side
 		if n.left == nil {
-			n.left = &Node{data: v, parent: n}
+			n.left = &Node{Data: v, parent: n}
 		} else {
 			t.insertAfter(n.left, v)
 		}
@@ -197,14 +195,14 @@ func (t *BinaryTree) Delete(v interface{}) bool {
 		t.removeParentRelation(n)
 	case n.right != nil && n.left == nil: // one node, right
 		n.right.parent = n.parent // replace parent
-		if t.lessFn(n.parent.data, n.data) {
+		if t.lessFn(n.parent.Data, n.Data) {
 			n.parent.right = n.right
 		} else {
 			n.parent.left = n.right
 		}
 	case n.left != nil && n.right == nil: // one node, left
 		n.left.parent = n.parent // replace parent
-		if t.lessFn(n.parent.data, n.data) {
+		if t.lessFn(n.parent.Data, n.Data) {
 			n.parent.right = n.left
 		} else {
 			n.parent.left = n.left
@@ -307,7 +305,7 @@ func (t *BinaryTree) replaceNode(n, s *Node, st successorType) {
 // removeParentRelation removes n as n.parent child
 func (t *BinaryTree) removeParentRelation(n *Node) {
 	// if n > parent, n is right child
-	if t.lessFn(n.parent.data, n.data) {
+	if t.lessFn(n.parent.Data, n.Data) {
 		n.parent.right = nil
 	} else { // otherwise n is left child
 		n.parent.left = nil
@@ -316,7 +314,7 @@ func (t *BinaryTree) removeParentRelation(n *Node) {
 
 // setAsParent sets n as child of p
 func (t *BinaryTree) setAsParent(n, p *Node) {
-	if t.lessFn(p.data, n.data) {
+	if t.lessFn(p.Data, n.Data) {
 		p.right = n
 	} else {
 		p.left = n
@@ -329,7 +327,7 @@ func (t *BinaryTree) Search(v interface{}) *Node {
 		return nil // empty tree
 	}
 	for i := t.root; ; {
-		greater := t.lessFn(i.data, v)
+		greater := t.lessFn(i.Data, v)
 		if greater {
 			if i.right == nil {
 				break // no answer
@@ -337,7 +335,7 @@ func (t *BinaryTree) Search(v interface{}) *Node {
 				i = i.right // traverse to right
 			}
 		} else {
-			if !t.lessFn(v, i.data) { // equal?
+			if !t.lessFn(v, i.Data) { // equal?
 				return i // found it!
 			} else {
 				if i.left == nil {

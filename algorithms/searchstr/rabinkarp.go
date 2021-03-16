@@ -9,7 +9,7 @@ import (
 func RabinKarp(data string, s string) int {
 	// this version of rabin-karp algorithm is slower than naive
 	// string search due to hashing algorithm used is not rolling hash
-	// for proper implementation of rabin fingerprint should be used
+	// for proper implementation rabin fingerprint hash or similar should be used
 	var fnvHash = fnv.New32()
 
 	if n, err := fnvHash.Write([]byte(s)); n == 0 || err != nil {

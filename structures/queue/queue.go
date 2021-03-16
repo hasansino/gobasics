@@ -1,3 +1,10 @@
+//
+// Package queue implements queue data structure.
+//
+// There is two implementations:
+//   * Queue based on circular buffer
+//   * LLQueue based on linked list
+//
 package queue
 
 import (

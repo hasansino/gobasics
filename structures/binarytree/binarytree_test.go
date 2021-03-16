@@ -41,11 +41,11 @@ func TestBinaryTree_Validate(t *testing.T) {
 	assert.Error(t, btree.Validate())
 
 	btree = generateBinaryTree(testValues)
-	btree.root.left.data = 22
+	btree.root.left.Data = 22
 	assert.Error(t, btree.Validate())
 
 	btree = generateBinaryTree(testValues)
-	btree.root.right.data = 1
+	btree.root.right.Data = 1
 	assert.Error(t, btree.Validate())
 }
 
@@ -367,10 +367,10 @@ func TestBinaryTree_Search(t *testing.T) {
 	btree := generateBinaryTree(testValues)
 	searchRes := btree.Search(24)
 	assert.NotNil(t, searchRes)
-	assert.Equal(t, 24, searchRes.data)
+	assert.Equal(t, 24, searchRes.Data)
 	searchRes = btree.Search(10) // root node
 	assert.NotNil(t, searchRes)
-	assert.Equal(t, 10, searchRes.data)
+	assert.Equal(t, 10, searchRes.Data)
 }
 
 func TestBtree_Traverse_NLR(t *testing.T) {
@@ -379,7 +379,7 @@ func TestBtree_Traverse_NLR(t *testing.T) {
 		btree         = generateBinaryTree(testValues)
 	)
 	btree.Traverse(NLR, func(node *Node) bool {
-		traversedPath = append(traversedPath, node.data)
+		traversedPath = append(traversedPath, node.Data)
 		return true
 	})
 	assert.Equal(t, []interface{}{10, 5, 4, 3, 7, 6, 9, 8, 11, 24, 20, 19, 21}, traversedPath)
@@ -391,7 +391,7 @@ func TestBtree_Traverse_LNR(t *testing.T) {
 		btree         = generateBinaryTree(testValues)
 	)
 	btree.Traverse(LNR, func(node *Node) bool {
-		traversedPath = append(traversedPath, node.data)
+		traversedPath = append(traversedPath, node.Data)
 		return true
 	})
 	assert.Equal(t, []interface{}{3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 20, 21, 24}, traversedPath)
@@ -403,7 +403,7 @@ func TestBtree_Traverse_RNL(t *testing.T) {
 		btree         = generateBinaryTree(testValues)
 	)
 	btree.Traverse(RNL, func(node *Node) bool {
-		traversedPath = append(traversedPath, node.data)
+		traversedPath = append(traversedPath, node.Data)
 		return true
 	})
 	assert.Equal(t, []interface{}{24, 21, 20, 19, 11, 10, 9, 8, 7, 6, 5, 4, 3}, traversedPath)
@@ -415,7 +415,7 @@ func TestBtree_Traverse_LRN(t *testing.T) {
 		btree         = generateBinaryTree(testValues)
 	)
 	btree.Traverse(LRN, func(node *Node) bool {
-		traversedPath = append(traversedPath, node.data)
+		traversedPath = append(traversedPath, node.Data)
 		return true
 	})
 	assert.Equal(t, []interface{}{3, 4, 6, 8, 9, 7, 5, 19, 21, 20, 24, 11, 10}, traversedPath)

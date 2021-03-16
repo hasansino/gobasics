@@ -1,3 +1,10 @@
+//
+// Package stack implements stack data structure.
+//
+// There is two implementations:
+//   * Stack based on slice
+//   * LLStack based on linked list
+//
 package stack
 
 import "errors"

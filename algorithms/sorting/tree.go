@@ -13,7 +13,7 @@ func TreeSort(data []int) []int {
 	}
 	tmp := make([]int, 0, len(data))
 	bt.Traverse(binarytree.LNR, func(n *binarytree.Node) bool {
-		tmp = append(tmp, n.Value().(int))
+		tmp = append(tmp, n.Data.(int))
 		return true
 	})
 	return tmp
