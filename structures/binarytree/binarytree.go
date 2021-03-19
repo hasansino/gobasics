@@ -1,17 +1,17 @@
 //
 // Package binarytree is implementation of binary tree data structure.
 //
+// https://en.wikipedia.org/wiki/Binary_search_tree
+// https://en.wikipedia.org/wiki/Tree_traversal
+// https://afteracademy.com/blog/what-is-a-tree-data-structure
+// https://afteracademy.com/blog/binary-search-tree-introduction-operations-and-applications
+//
 package binarytree
 
 import (
 	"errors"
 	"fmt"
 )
-
-// https://en.wikipedia.org/wiki/Binary_search_tree
-// https://en.wikipedia.org/wiki/Tree_traversal
-// https://afteracademy.com/blog/what-is-a-tree-data-structure
-// https://afteracademy.com/blog/binary-search-tree-introduction-operations-and-applications
 
 // Less is node comparison function
 // It should return true if i < j

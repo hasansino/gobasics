@@ -5,12 +5,12 @@
 //   * Stack based on slice
 //   * LLStack based on linked list
 //
+// https://en.wikipedia.org/wiki/Stack_(abstract_data_type)
+// https://afteracademy.com/blog/stack-and-its-basic-operations
+//
 package stack
 
 import "errors"
-
-// https://en.wikipedia.org/wiki/Stack_(abstract_data_type)
-// https://afteracademy.com/blog/stack-and-its-basic-operations
 
 // Stack is stack implementation using slices
 type Stack struct {

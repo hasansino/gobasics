@@ -5,14 +5,14 @@
 //   * Queue based on circular buffer
 //   * LLQueue based on linked list
 //
+// https://en.wikipedia.org/wiki/Queue_(abstract_data_type)
+// https://afteracademy.com/blog/queue-and-its-basic-operations
+//
 package queue
 
 import (
 	"errors"
 )
-
-// https://en.wikipedia.org/wiki/Queue_(abstract_data_type)
-// https://afteracademy.com/blog/queue-and-its-basic-operations
 
 // Queue structure backed by slice (circular array)
 type Queue struct {

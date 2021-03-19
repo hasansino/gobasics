@@ -1,4 +1,4 @@
-package solid
+package ocp
 
 import (
 	"testing"

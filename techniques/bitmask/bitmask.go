@@ -1,6 +1,9 @@
-package bitmask
-
+//
+// Package bitmask is simple example how bitmask works in golang.
+//
 // https://en.wikipedia.org/wiki/Mask_(computing)
+//
+package bitmask
 
 // Let's represent some abstract capabilities
 // Each of them will represent a specific bit

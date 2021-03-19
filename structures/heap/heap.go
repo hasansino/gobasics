@@ -1,16 +1,16 @@
 //
 // Package heap implements heap data structure.
 //
+// https://en.wikipedia.org/wiki/Heap_(data_structure)
+// https://afteracademy.com/blog/introduction-to-heaps-in-data-structures
+// https://afteracademy.com/blog/heap-building-and-heap-sort
+// https://afteracademy.com/blog/operations-on-heaps
+//
 package heap
 
 import (
 	"math"
 )
-
-// https://en.wikipedia.org/wiki/Heap_(data_structure)
-// https://afteracademy.com/blog/introduction-to-heaps-in-data-structures
-// https://afteracademy.com/blog/heap-building-and-heap-sort
-// https://afteracademy.com/blog/operations-on-heaps
 
 // Heap math:
 // * For any node left and right child is Arr[2*i + 1] and Arr[2*i+2]

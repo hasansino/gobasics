@@ -1,14 +1,9 @@
 //
-// Package solid provides examples of SOLID principles applied in golang.
+// Package ocp shows how Open-Closed Principle can be applied in Go.
 //
-// Open-Closed principles states that object should be closed for modification,
-// but open for extension.
-//
-// This is basic example how composition can be used to achieve that.
-//
-package solid
-
 // https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle
+//
+package ocp
 
 // _Vehicle is a struct describing a vehicle, it has field `vType` which says
 // which type of vehicle it is.

@@ -1,16 +1,16 @@
 //
 // Package graph implements graph data structure and basic operations with it.
 //
+// https://en.wikipedia.org/wiki/Graph_theory
+// https://en.wikipedia.org/wiki/Graph_(abstract_data_type)
+// https://afteracademy.com/blog/introduction-to-graph-in-programming
+//
 package graph
 
 import (
 	"github.com/hasansino/gobasics/structures/queue"
 	"github.com/hasansino/gobasics/structures/stack"
 )
-
-// https://en.wikipedia.org/wiki/Graph_theory
-// https://en.wikipedia.org/wiki/Graph_(abstract_data_type)
-// https://afteracademy.com/blog/introduction-to-graph-in-programming
 
 // Graph is ... well, a graph
 type Graph struct {
@@ -90,10 +90,9 @@ func (g *Graph) Adjacent(i, j int) bool {
 	return g.edges[i][j] != nil || g.edges[j][i] != nil
 }
 
+// BreathFirstSearch of a graph
 // https://en.wikipedia.org/wiki/Breadth-first_search
 // https://afteracademy.com/blog/graph-traversal-breadth-first-search
-
-// BreathFirstSearch of a graph
 func (g *Graph) BreathFirstSearch(v interface{}) int {
 	var (
 		q       = queue.NewLLQueue(g.size)
@@ -125,10 +124,9 @@ func (g *Graph) BreathFirstSearch(v interface{}) int {
 	return -1
 }
 
+// DepthFirstSearch of graph
 // https://en.wikipedia.org/wiki/Depth-first_search
 // https://afteracademy.com/blog/graph-traversal-depth-first-search
-
-// DepthFirstSearch of graph
 func (g *Graph) DepthFirstSearch(v interface{}) int {
 	var (
 		s       = stack.NewLLStack()
@@ -200,10 +198,9 @@ func (g *Graph) ShortestPath(v interface{}) []int {
 	return nil
 }
 
+// DijkstrasShortestDistances algorithm
 // https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
 // https://afteracademy.com/blog/dijkstras-algorithm
-
-// DijkstrasShortestDistances algorithm
 func (g *Graph) DijkstrasShortestDistances(from int) []int {
 	var (
 		visited   = make([]bool, g.size)
