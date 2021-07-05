@@ -1,5 +1,5 @@
 //
-// Package srp shows how Liskov Substitution Principle can be applied in Go.
+// Package lsp shows how Liskov Substitution Principle can be applied in Go.
 //
 // https://en.wikipedia.org/wiki/Liskov_substitution_principle
 //
