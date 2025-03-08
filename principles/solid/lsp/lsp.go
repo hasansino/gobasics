@@ -1,8 +1,6 @@
-//
 // Package lsp shows how Liskov Substitution Principle can be applied in Go.
 //
 // https://en.wikipedia.org/wiki/Liskov_substitution_principle
-//
 package lsp
 
 // Vehicle is interface describing vehicle that can be parked
@@ -26,7 +24,7 @@ type MountainBike struct {
 
 // AdjustSuspension is mountain bike specific feature, let's say it is major difference
 // of mountain bike from ordinary bicycle.
-func (b Bicycle) AdjustSuspension() { /* ... */ }
+func (b MountainBike) AdjustSuspension() { /* ... */ }
 
 // ----------------------------------------------------------------
 

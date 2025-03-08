@@ -1,8 +1,6 @@
-//
 // Package ocp shows how Open-Closed Principle can be applied in Go.
 //
 // https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle
-//
 package ocp
 
 // _Vehicle is a struct describing a vehicle, it has field `vType` which says
@@ -35,7 +33,7 @@ func (v *_Vehicle) Name() string {
 // ----------------------------------------------------------------
 
 // Vehicle is abstract struct describing vehicles with wheels.
-// It have fields which is common to all vehicles, and can be described
+// It has fields which is common to all vehicles, and can be described
 // as abstract type for extension.
 type Vehicle struct {
 	wheels int

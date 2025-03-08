@@ -1,15 +1,10 @@
-# Go Basics
+# golang
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/hasansino/gobasics)](https://goreportcard.com/report/github.com/hasansino/gobasics)
-[![Build Status](https://travis-ci.com/hasansino/gobasics.svg?branch=master)](https://travis-ci.com/hasansino/gobasics)
+Golang snippets and practices.
 
-Algorithms, data-structures, patterns and various techniques written in golang.  
+## todo
 
-# Contributing
-
-Contributions appreciated and accepted in form of:
-
-* Suggestions for improvement (code, style, tests etc.)
-* Grammar corrections
-* Bugfixes
-* Problem definitions w/o solution
+- [ ] [Bloom Filter](https://en.m.wikipedia.org/wiki/Bloom_filter)
+- [ ] [Cuckoo Filter](https://en.wikipedia.org/wiki/Cuckoo_filter)
+- [ ] [Bit Hacks](https://graphics.stanford.edu/~seander/bithacks.html)
+- [ ] [Cache Policies](https://en.wikipedia.org/wiki/Cache_replacement_policies)
